@@ -231,6 +231,13 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 @property (assign, nonatomic) CGFloat portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace;
 
+/** adding by su
+ */
+@property (assign, nonatomic) CGFloat barViewLeadingHorizontalSpace;
+@property (assign, nonatomic) CGFloat barViewTrailingHorizontalSpace;
+@property (assign, nonatomic) CGFloat barViewBottomVerticalSpace;
+@property (assign, nonatomic) CGFloat barViewHeight;
+
 /**
  The inset of the circle mask rect's area within the crop view's area in landscape orientation. Default value is `45.0f`.
  */

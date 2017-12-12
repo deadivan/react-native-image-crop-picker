@@ -60,6 +60,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 @property (strong, nonatomic) UILabel *moveAndScaleLabel;
 @property (strong, nonatomic) UIButton *cancelButton;
 @property (strong, nonatomic) UIButton *chooseButton;
+@property (strong, nonatomic) UIView *barView;
 
 @property (strong, nonatomic) UITapGestureRecognizer *doubleTapGestureRecognizer;
 @property (strong, nonatomic) UIRotationGestureRecognizer *rotationGestureRecognizer;
@@ -70,6 +71,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 @property (strong, nonatomic) NSLayoutConstraint *cancelButtonLeadingConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *chooseButtonBottomConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *chooseButtonTrailingConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *barViewConstraint;
 
 @end
 
@@ -90,10 +92,14 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         _portraitCircleMaskRectInnerEdgeInset = 15.0f;
         _portraitSquareMaskRectInnerEdgeInset = 20.0f;
         _portraitMoveAndScaleLabelTopAndCropViewTopVerticalSpace = 64.0f;
-        _portraitCropViewBottomAndCancelButtonBottomVerticalSpace = 21.0f;
-        _portraitCropViewBottomAndChooseButtonBottomVerticalSpace = 21.0f;
-        _portraitCancelButtonLeadingAndCropViewLeadingHorizontalSpace = 13.0f;
-        _portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace = 13.0;
+        _portraitCropViewBottomAndCancelButtonBottomVerticalSpace = 8.0f;
+        _portraitCropViewBottomAndChooseButtonBottomVerticalSpace = 8.0f;
+        _portraitCancelButtonLeadingAndCropViewLeadingHorizontalSpace = 16.0f;
+        _portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace = 16.0;
+        _barViewLeadingHorizontalSpace = 0.0f;
+        _barViewTrailingHorizontalSpace = 0.0f;
+        _barViewBottomVerticalSpace = 0.0f;
+        _barViewHeight = 98.0f;
         
         _landscapeCircleMaskRectInnerEdgeInset = 45.0f;
         _landscapeSquareMaskRectInnerEdgeInset = 45.0f;
@@ -144,6 +150,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
     [self.view addSubview:self.imageScrollView];
     [self.view addSubview:self.overlayView];
     [self.view addSubview:self.moveAndScaleLabel];
+    [self.view addSubview:self.barView];
     [self.view addSubview:self.cancelButton];
     [self.view addSubview:self.chooseButton];
     
@@ -230,6 +237,50 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
                                                                             constant:constant];
         [self.view addConstraint:self.moveAndScaleLabelTopConstraint];
         
+        
+        // --------------------
+        // The barView "barView".
+        // --------------------
+        //子view的上边缘离父view的上边缘40个像素
+        NSLayoutConstraint *contraint1 = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem: nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:49.0f];
+        //子view的左边缘离父view的左边缘40个像素
+        NSLayoutConstraint *contraint2 = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+        //子view的下边缘离父view的下边缘40个像素
+        NSLayoutConstraint *contraint3 = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+        //子view的右边缘离父view的右边缘40个像素
+        NSLayoutConstraint *contraint4 = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+        
+        NSArray *array = [NSArray arrayWithObjects:contraint1, contraint2, contraint3, contraint4, nil];
+        [self.view addConstraints:array];
+        
+//        
+//        constant = self.barViewLeadingHorizontalSpace;
+//        self.barViewConstraint = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual
+//                                                                             toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f
+//                                                                           constant:constant];
+//        [self.view addConstraint:self.barViewConstraint];
+//        
+//        constant = self.barViewTrailingHorizontalSpace;
+//        self.barViewConstraint = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual
+//                                                                            toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0f
+//                                                                          constant:constant];
+//        [self.view addConstraint:self.barViewConstraint];
+//        
+//        
+//        constant = self.barViewBottomVerticalSpace;
+//        self.barViewConstraint = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+//                                                                 toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0f
+//                                                               constant:constant];
+//        [self.view addConstraint:self.barViewConstraint];
+//        
+//        
+//        constant = self.barViewBottomVerticalSpace;
+//        self.barViewConstraint = [NSLayoutConstraint constraintWithItem:self.barView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual
+//                                                                 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f
+//                                                               constant:constant];
+//        [self.view addConstraint:self.barViewConstraint];
+//        
+        
         // --------------------
         // The button "Cancel".
         // --------------------
@@ -270,12 +321,14 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
             self.cancelButtonLeadingConstraint.constant = self.portraitCancelButtonLeadingAndCropViewLeadingHorizontalSpace;
             self.chooseButtonBottomConstraint.constant = self.portraitCropViewBottomAndChooseButtonBottomVerticalSpace;
             self.chooseButtonTrailingConstraint.constant = self.portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace;
+            self.barViewConstraint.constant = self.barViewLeadingHorizontalSpace;
         } else {
             self.moveAndScaleLabelTopConstraint.constant = self.landscapeMoveAndScaleLabelTopAndCropViewTopVerticalSpace;
             self.cancelButtonBottomConstraint.constant = self.landscapeCropViewBottomAndCancelButtonBottomVerticalSpace;
             self.cancelButtonLeadingConstraint.constant = self.landscapeCancelButtonLeadingAndCropViewLeadingHorizontalSpace;
             self.chooseButtonBottomConstraint.constant = self.landscapeCropViewBottomAndChooseButtonBottomVerticalSpace;
             self.chooseButtonTrailingConstraint.constant = self.landscapeCropViewTrailingAndChooseButtonTrailingHorizontalSpace;
+            self.barViewConstraint.constant = self.barViewLeadingHorizontalSpace;
         }
     }
 }
@@ -328,11 +381,22 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         _moveAndScaleLabel = [[UILabel alloc] init];
         _moveAndScaleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _moveAndScaleLabel.backgroundColor = [UIColor clearColor];
-        _moveAndScaleLabel.text = RSKLocalizedString(@"Move and Scale", @"Move and Scale label");
-        _moveAndScaleLabel.textColor = [UIColor whiteColor];
+//        _moveAndScaleLabel.text = RSKLocalizedString(@"Move and Scale", @"Move and Scale label");
+//        _moveAndScaleLabel.textColor = [UIColor whiteColor];
         _moveAndScaleLabel.opaque = NO;
     }
     return _moveAndScaleLabel;
+}
+
+- (UIView *)barView
+{
+    if (!_barView) {
+        _barView = [[UIView alloc] init];
+        _barView.backgroundColor = [UIColor blackColor];
+        _barView.alpha = 0.4f;
+        _barView.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _barView;
 }
 
 - (UIButton *)cancelButton
