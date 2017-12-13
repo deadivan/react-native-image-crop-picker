@@ -331,14 +331,14 @@ RCT_EXPORT_METHOD(openCropper:(NSDictionary *)options
         
         // create overlay
         UIView *loadingView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        loadingView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+        loadingView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
         loadingView.clipsToBounds = YES;
         
         // create loading spinner
         UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         activityView.frame = CGRectMake(65, 40, activityView.bounds.size.width, activityView.bounds.size.height);
         activityView.center = loadingView.center;
-        [loadingView addSubview:activityView];
+//        [loadingView addSubview:activityView];
         
         // create message
         UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 115, 130, 22)];
@@ -351,11 +351,11 @@ RCT_EXPORT_METHOD(openCropper:(NSDictionary *)options
         loadingLabel.textAlignment = NSTextAlignmentCenter;
         loadingLabel.text = [self.options objectForKey:@"loadingLabelText"];
         [loadingLabel setFont:[UIFont boldSystemFontOfSize:18]];
-        [loadingView addSubview:loadingLabel];
+//        [loadingView addSubview:loadingLabel];
         
         // show all
-        [mainView addSubview:loadingView];
-        [activityView startAnimating];
+//        [mainView addSubview:loadingView];
+//        [activityView startAnimating];
         
         handler(activityView, loadingView);
     });
